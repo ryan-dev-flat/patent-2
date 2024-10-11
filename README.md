@@ -1,357 +1,279 @@
-# Phase 4 Full-Stack Application Project Template
-
-## Learning Goals
-
-- Discuss the basic directory structure of a full-stack Flask/React application.
-- Carry out the first steps in creating your Phase 4 project.
-
----
-
-## Introduction
-
-Fork and clone this lesson for a template for your full-stack application. Take
-a look at the directory structure before we begin (NOTE: node_modules will be
-generated in a subsequent step):
-
-```console
-$ tree -L 2
-$ # the -L argument limits the depth at which we look into the directory structure
-.
-├── CONTRIBUTING.md
-├── LICENSE.md
-├── Pipfile
-├── README.md
-├── client
-│   ├── README.md
-│   ├── package.json
-│   ├── public
-│   └── src
-└── server
-    ├── app.py
-    ├── config.py
-    ├── models.py
-    └── seed.py
-```
-
-A `migrations` folder will be added to the `server` directory in a later step.
-
-The `client` folder contains a basic React application, while the `server`
-folder contains a basic Flask application. You will adapt both folders to
-implement the code for your project .
-
-NOTE: If you did not previously install `tree` in your environment setup, MacOS
-users can install this with the command `brew install tree`. WSL and Linux users
-can run `sudo apt-get install tree` to download it as well.
-
-## Where Do I Start?
-
-Just as with your Phase 3 Project, this will likely be one of the biggest
-projects you've undertaken so far. Your first task should be creating a Git
-repository to keep track of your work and roll back any undesired changes.
-
-### Removing Existing Git Configuration
-
-If you're using this template, start off by removing the existing metadata for
-Github and Canvas. Run the following command to carry this out:
-
-```console
-$ rm -rf .git .canvas
-```
-
-The `rm` command removes files from your computer's memory. The `-r` flag tells
-the console to remove _recursively_, which allows the command to remove
-directories and the files within them. `-f` removes them permanently.
-
-`.git` contains this directory's configuration to track changes and push to
-Github (you want to track and push _your own_ changes instead), and `.canvas`
-contains the metadata to create a Canvas page from your Git repo. You don't have
-the permissions to edit our Canvas course, so it's not worth keeping around.
-
-### Creating Your Own Git Repo
-
-First things first- rename this directory! Once you have an idea for a name,
-move one level up with `cd ..` and run
-`mv python-p4-project-template <new-directory-name>` to change its name (replace
-<new-directory-name> with an appropriate project directory name).
-
-> **Note: If you typed the `mv` command in a terminal within VS Code, you should
-> close VS Code then reopen it.**
-
-> **Note: `mv` actually stands for "move", but your computer interprets this
-> rename as a move from a directory with the old name to a directory with a new
-> name.**
-
-`cd` back into your new directory and run `git init` to create a local git
-repository. Add all of your local files to version control with `git add --all`,
-then commit them with `git commit -m'initial commit'`. (You can change the
-message here- this one is just a common choice.)
-
-Navigate to [GitHub](https://github.com). In the upper-right corner of the page,
-click on the "+" dropdown menu, then select "New repository". Enter the name of
-your local repo, choose whether you would like it to be public or private, make
-sure "Initialize this repository with a README" is unchecked (you already have
-one), then click "Create repository".
-
-Head back to the command line and enter
-`git remote add origin git@github.com:github-username/new-repository-name.git`.
-NOTE: Replace `github-username` with your github username, and
-`new-repository-name` with the name of your new repository. This command will
-map the remote repository to your local repository. Finally, push your first
-commit with `git push -u origin main`.
-
-Your project is now version-controlled locally and online. This will allow you
-to create different versions of your project and pick up your work on a
-different machine if the need arises.
-
----
-
-## Setup
-
-### `server/`
-
-The `server/` directory contains all of your backend code.
-
-`app.py` is your Flask application. You'll want to use Flask to build a simple
-API backend like we have in previous modules. You should use Flask-RESTful for
-your routes. You should be familiar with `models.py` and `seed.py` by now, but
-remember that you will need to use Flask-SQLAlchemy, Flask-Migrate, and
-SQLAlchemy-Serializer instead of SQLAlchemy and Alembic in your models.
-
-The project contains a default `Pipfile` with some basic dependencies. You may
-adapt the `Pipfile` if there are additional dependencies you want to add for
-your project.
-
-To download the dependencies for the backend server, run:
-
-```console
-pipenv install
-pipenv shell
-```
-
-You can run your Flask API on [`localhost:5555`](http://localhost:5555) by
-running:
-
-```console
-python server/app.py
-```
-
-Check that your server serves the default route `http://localhost:5555`. You
-should see a web page with the heading "Project Server".
-
-### `client/`
-
-The `client/` directory contains all of your frontend code. The file
-`package.json` has been configured with common React application dependencies,
-include `react-router-dom`. The file also sets the `proxy` field to forward
-requests to `"http://localhost:5555". Feel free to change this to another port-
-just remember to configure your Flask app to use another port as well!
-
-To download the dependencies for the frontend client, run:
-
-```console
-npm install --prefix client
-```
-
-You can run your React app on [`localhost:3000`](http://localhost:3000) by
-running:
-
-```sh
-npm start --prefix client
-```
-
-Check that your the React client displays a default page
-`http://localhost:3000`. You should see a web page with the heading "Project
-Client".
-
-## Generating Your Database
-
-NOTE: The initial project directory structure does not contain the `instance` or
-`migrations` folders. Change into the `server` directory:
-
-```console
-cd server
-```
-
-Then enter the commands to create the `instance` and `migrations` folders and
-the database `app.db` file:
-
-```
-flask db init
-flask db upgrade head
-```
-
-Type `tree -L 2` within the `server` folder to confirm the new directory
-structure:
-
-```console
-.
-├── app.py
-├── config.py
-├── instance
-│   └── app.db
-├── migrations
-│   ├── README
-│   ├── __pycache__
-│   ├── alembic.ini
-│   ├── env.py
-│   ├── script.py.mako
-│   └── versions
-├── models.py
-└── seed.py
-```
-
-Edit `models.py` and start creating your models. Import your models as needed in
-other modules, i.e. `from models import ...`.
-
-Remember to regularly run
-`flask db revision --autogenerate -m'<descriptive message>'`, replacing
-`<descriptive message>` with an appropriate message, and `flask db upgrade head`
-to track your modifications to the database and create checkpoints in case you
-ever need to roll those modifications back.
-
-> **Tip: It's always a good idea to start with an empty revision! This allows
-> you to roll all the way back while still holding onto your database. You can
-> create this empty revision with `flask db revision -m'Create DB'`.**
-
-If you want to seed your database, now would be a great time to write out your
-`seed.py` script and run it to generate some test data. Faker has been included
-in the Pipfile if you'd like to use that library.
-
----
-
-#### `config.py`
-
-When developing a large Python application, you might run into a common issue:
-_circular imports_. A circular import occurs when two modules import from one
-another, such as `app.py` and `models.py`. When you create a circular import and
-attempt to run your app, you'll see the following error:
-
-```console
-ImportError: cannot import name
-```
-
-If you're going to need an object in multiple modules like `app` or `db`,
-creating a _third_ module to instantiate these objects can save you a great deal
-of circular grief. Here's a good start to a Flask config file (you may need more
-if you intend to include features like authentication and passwords):
-
-```py
-# Standard library imports
-
-# Remote library imports
-from flask import Flask
-from flask_cors import CORS
-from flask_migrate import Migrate
-from flask_restful import Api
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import MetaData
-
-# Local imports
-
-# Instantiate app, set attributes
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.json.compact = False
-
-# Define metadata, instantiate db
-metadata = MetaData(naming_convention={
-    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
-})
-db = SQLAlchemy(metadata=metadata)
-migrate = Migrate(app, db)
-db.init_app(app)
-
-# Instantiate REST API
-api = Api(app)
-
-# Instantiate CORS
-CORS(app)
-
-```
-
-Now let's review that last line...
-
-#### CORS
-
-CORS (Cross-Origin Resource Sharing) is a system that uses HTTP headers to
-determine whether resources from different servers-of-origin can be accessed. If
-you're using the fetch API to connect your frontend to your Flask backend, you
-need to configure CORS on your Flask application instance. Lucky for us, that
-only takes one line:
-
-```py
-CORS(app)
-
-```
-
-By default, Flask-CORS enables CORS on all routes in your application with all
-fetching servers. You can also specify the resources that allow CORS. The
-following specifies that routes beginning with `api/` allow CORS from any
-originating server:
-
-```py
-CORS(app, resources={r"/api/*": {"origins": "*"}})
-
-```
-
-You can also set this up resource-by-resource by importing and using the
-`@cross_origin` decorator:
-
-```py
-@app.route("/")
-@cross_origin()
-def howdy():
-  return "Howdy partner!"
-
-```
-
----
-
-## Updating Your README.md
-
-`README.md` is a Markdown file that describes your project. These files can be
-used in many different ways- you may have noticed that we use them to generate
-entire Canvas lessons- but they're most commonly used as homepages for online
-Git repositories. **When you develop something that you want other people to
-use, you need to have a README.**
-
-Markdown is not a language that we cover in Flatiron's Software Engineering
-curriculum, but it's not a particularly difficult language to learn (if you've
-ever left a comment on Reddit, you might already know the basics). Refer to the
-cheat sheet in this lesson's resources for a basic guide to Markdown.
-
-### What Goes into a README?
-
-This README should serve as a template for your own- go through the important
-files in your project and describe what they do. Each file that you edit (you
-can ignore your migration files) should get at least a paragraph. Each function
-should get a small blurb.
-
-You should descibe your application first, and with a good level of detail. The
-rest should be ordered by importance to the user. (Probably routes next, then
-models.)
-
-Screenshots and links to resources that you used throughout are also useful to
-users and collaborators, but a little more syntactically complicated. Only add
-these in if you're feeling comfortable with Markdown.
-
----
-
-## Conclusion
-
-A lot of work goes into a full-stack application, but it all relies on concepts
-that you've practiced thoroughly throughout this phase. Hopefully this template
-and guide will get you off to a good start with your Phase 4 Project.
-
-Happy coding!
-
----
-
-## Resources
-
-- [Setting up a respository - Atlassian](https://www.atlassian.com/git/tutorials/setting-up-a-repository)
-- [Create a repo- GitHub Docs](https://docs.github.com/en/get-started/quickstart/create-a-repo)
-- [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)
-- [Python Circular Imports - StackAbuse](https://stackabuse.com/python-circular-imports/)
-- [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/)
+# Patent Management System
+
+## Description
+Patent Management System: A web application for managing patent registrations, conducting patentability analysis, and interacting with an AI-powered chatbot for patent-related queries.
+
+## Wireframe
+![alt text](image.png)
+
+## Implement a minimum of 5 client side routes using React router.
+
++--------------------------------------------------+
+| Header: Home | Register | Login | Chat | Analysis |
++--------------------------------------------------+
+|                                                  |
+|  +------------------+   +---------------------+  |
+|  | Register Box     |   | Login Box           |  |
+|  |------------------|   |---------------------|  |
+|  | Username         |   | Username            |  |
+|  | [TextField]      |   | [TextField]         |  |
+|  | Password         |   | Password            |  |
+|  | [TextField]      |   | [TextField]         |  |
+|  | [Register Button]|   | [Login Button]      |  |
+|  +------------------+   +---------------------+  |
+|                                                  |
+|  +--------------------------------------------+  |
+|  | Conditional Rendering (if token exists)    |  |
+|  |--------------------------------------------|  |
+|  | Chat Component                             |  |
+|  | PatentabilityAnalysis Component            |  |
+|  | Patent Analysis Chart                      |  |
+|  +--------------------------------------------+  |
+|                                                  |
++--------------------------------------------------+
+| Footer                                           |
++--------------------------------------------------+
+
+
+
+## User Stories
+1. **As a user, I want to register an account so that I can access the patent management system. I want to update and delete my account**
+2. **As a user, I want to log in to my account so that I can manage my patents.**
+3. **As a user, I may have many patents, and a patent can have many users.**
+4. **As a user, I want to create a new patent entry so that I can keep track of my inventions, and to update and delete my patents**
+5. **As a user, I want to analyze the patentability of my invention idea so that I can determine its novelty, non-obviousness, and utility. I want an overall patentability score based on these factors. I want a prior art search performed to generate data to support the patentabillity score.**
+6. **As a user, I want to see a visual representation of my patentability score in the form of a patentability analysis chart/widget.**
+7. **As a user, I want to chat with an AI-powered chatbot to get answers to my patent-related queries and to develop my patent application**
+
+**Implement something new not taught in the curriculum.**
+[Axios](https://axios-http.com/docs/api_intro)?
+[Material UI](https://mui.com/material-ui/getting-started/)
+**Implement [`useContext`](https://react.dev/reference/react/useContext) or [Redux](https://redux.js.org/)to manage State**
+## Implement validations and error handling.
+
+## React Tree Diagram
+![React Hierarchy](Patent-React-Tree-2.png)
+
+## App Component
+- **State**:
+  - `username`
+  - `password`
+  - `token`
+  - `user`
+  - `loading`
+- **Functions**:
+  - `register`
+  - `login`
+- **Children**:
+  - `Typography` (Patent Management)
+  - `Box` (Register)
+    - `Typography` (Register)
+    - `TextField` (Username)
+    - `TextField` (Password)
+    - `Button` (Register)
+  - `Box` (Login)
+    - `Typography` (Login)
+    - `TextField` (Username)
+    - `TextField` (Password)
+    - `Button` (Login)
+  - Conditional Rendering (if `token` exists)
+    - `Chat`
+    - `PatentabilityAnalysis`
+    - `Box` (Patent Analysis Chart)
+      - `Typography` (Patent Analysis Chart)
+      - `Line` (Chart)
+
+## Chat Component
+- **Props**:
+  - `token`
+- **State**:
+  - `message`
+  - `response`
+  - `patents`
+- **Functions**:
+  - `sendMessage`
+- **Children**:
+  - `h2` (Chat with GPT)
+  - `textarea` (Message Input)
+  - `button` (Send)
+  - `div` (Response)
+    - `h3` (Response)
+    - `p` (Response Text)
+  - `div` (Related Patents)
+    - `h3` (Related Patents)
+    - `ul` (Patent List)
+      - `li` (Patent Item)
+        - `h4` (Patent Title)
+        - `p` (Patent Abstract)
+
+## PatentabilityAnalysis Component
+- **Props**:
+  - `token`
+- **State**:
+  - `idea`
+  - `analysis`
+- **Functions**:
+  - `submitIdea`
+- **Children**:
+  - `h2` (Patentability Analysis)
+  - `textarea` (Idea Input)
+  - `button` (Submit)
+  - `div` (Analysis)
+    - `h3` (Analysis)
+    - `p` (Novelty)
+    - `p` (Non-obviousness)
+    - `p` (Utility)
+    - `h4` (Relevant Precedents)
+    - `ul` (Precedent List)
+      - `li` (Precedent Item)
+
+## Patent Application Tool
+
+## Other Components
+- **index.js**
+  - Renders `App` component
+- **reportWebVitals.js**
+  - Measures performance
+
+
+**Implement Flask and SQLAlchemy in an application backend.**
+
+## Database Schema
+**Implement a minimum of 4 models**
+**Include a many to many relationship.**
+**Implement validations and error handling.**
+
+### Tables and Relationships
+
+1. **User Table**:
+   - `id`: Integer, Primary Key
+   - `username`: String(64), Unique, Not Null
+   - `password`: String(128), Not Null
+   - Relationships:
+     - `patents`: Many-to-Many relationship with the `Patent` table through the `user_patent` association table
+
+2. **Patent Table**:
+   - `id`: Integer, Primary Key
+   - `title`: String(128), Not Null
+   - `description`: Text, Not Null
+   - `user_id`: Integer, Foreign Key to `User.id`, Not Null
+   - `patentability_score`: Float
+   - Relationships:
+     - `user`: Many-to-Many relationship with the `User` table through the `user_patent` association table
+     - `utility`: One-to-One relationship with the `Utility` table
+     - `novelty`: One-to-One relationship with the `NoveltyTest` table
+     - `obviousness`: One-to-One relationship with the `Obviousness` table
+     - `prior_art`: One-to-One relationship with the `PriorArtSearch` table
+
+3. **Utility Table**:
+   - `id`: Integer, Primary Key
+   - `operability`: Boolean
+   - `beneficial`: Boolean
+   - `practical`: Boolean
+   - `utility_score`: Float
+   - `patent_id`: Integer, Foreign Key to `Patent.id`
+   - Relationships:
+     - `patent`: One-to-One relationship with the `Patent` table
+
+4. **NoveltyTest Table**:
+   - `id`: Integer, Primary Key
+   - `patented`: Boolean
+   - `printed_pub`: Boolean
+   - `public_use`: Boolean
+   - `on_sale`: Boolean
+   - `publicly_available`: Boolean
+   - `patent_app`: Boolean
+   - `inventor_underoneyear`: Boolean
+   - `novelty_score`: Float
+   - `patent_id`: Integer, Foreign Key to `Patent.id`
+   - Relationships:
+     - `patent`: One-to-One relationship with the `Patent` table
+
+5. **Obviousness Table**:
+   - `id`: Integer, Primary Key
+   - `prior_art_scope`: String, Not Null
+   - `differences`: String, Not Null
+   - `skill_level`: String, Not Null
+   - `secondary_considerations`: String
+   - `obviousness_score`: Float
+   - `patent_id`: Integer, Foreign Key to `Patent.id`
+   - Relationships:
+     - `patent`: One-to-One relationship with the `Patent` table
+
+6. **PriorArtSearch Table**:
+   - `id`: Integer, Primary Key
+   - `elements`: String
+   - `key_words`: String
+   - `patent_search`: String
+   - `publications`: String
+   - `public_disclosures`: String
+   - `patent_id`: Integer, Foreign Key to `Patent.id`
+   - Relationships:
+     - `patent`: One-to-One relationship with the `Patent` table
+
+7. **user_patent Association Table**:
+   - `user_id`: Integer, Foreign Key to `User.id`, Primary Key
+   - `patent_id`: Integer, Foreign Key to `Patent.id`, Primary Key
+
+### Validations
+
+- **User Model**:
+  - `username`: Must not be empty, must be at least 3 characters long
+  - `password`: Must not be empty, must be at least 6 characters long
+
+## Schema Screenshot
+!Schema Screenshot
+
+![alt text](image-3.png)
+
+## API Routes
+- Include full CRUD on at least 1 model, following REST conventions.
+- Implement validations and error handling.
+- Implement something new not taught in the curriculum.
+`JSON Web Tokens (JWT)`
+[Flask-JWT-Extended Basic Usage](https://flask-jwt-extended.readthedocs.io/en/stable/basic_usage.html)
+## User Routes
+
+| HTTP Method | Endpoint          | Description                  | Request Body                  | Response Body                |
+|-------------|-------------------|------------------------------|-------------------------------|------------------------------|
+| GET         | /users            | Get all users                | None                          | List of users                |
+| GET         | /users/:id        | Get a specific user by ID    | None                          | User object                  |
+| POST        | /users            | Create a new user            | `{ "username": "", "password": "" }` | Created user object          |
+| PATCH       | /users/:id        | Update a specific user by ID | `{ "username": "", "password": "" }` | Updated user object          |
+| DELETE      | /users/:id        | Delete a specific user by ID | None                          | Success message              |
+
+## Patent Routes
+
+| HTTP Method | Endpoint          | Description                  | Request Body                  | Response Body                |
+|-------------|-------------------|------------------------------|-------------------------------|------------------------------|
+| GET         | /patents          | Get all patents              | None                          | List of patents              |
+| GET         | /patents/:id      | Get a patent by ID           | None                          | Patent object                |
+| POST        | /patents          | Create a new patent          | `{ "title": "", "description": "", "user_id": "" }` | Created patent object        |
+| PATCH       | /patents/:id      | Update a patent by ID        | `{ "title": "", "description": "", "user_id": "" }` | Updated patent object        |
+| DELETE      | /patents/:id      | Delete a patent by ID        | None                          | Success message              |
+
+
+## Patentability Analysis Routes
+
+| HTTP Method | Endpoint                      | Description                                | Request Body                  | Response Body                |
+|-------------|-------------------------------|--------------------------------------------|-------------------------------|------------------------------|
+| POST        | /patentability/analyze        | Analyze patentability of an idea           | `{ "idea": "" }`              | Analysis result              |
+| GET         | /patentability/:patent_id     | Get patentability analysis for a patent    | None                          | Patentability analysis       |
+
+
+
+## Stretch Goals
+1. **Implement user roles and permissions**: Allow different levels of access for users (e.g., admin, regular user).
+2. **Add real-time notifications**: Notify users of important events, such as patent status updates.
+3. **Integrate with external patent databases**: Automatically fetch and display relevant patent information from external sources.
+4. **Provide a patent application writing tool**  Allow users to access a patent application writingwidget with possible AI integration for suggestions.
+
+## Kanban Board
+!Kanban Board
+
+## New Technologies
+- **Material-UI**: For styling and UI components.
+- **React Bootstrap**: For responsive design and additional UI components.
+- **Tailwind CSS**: For utility-first CSS styling.
+- **Deployment**: Plan to deploy the application using platforms like Heroku or Render.
+- **State Management**: Use React's [`useContext`]((https://react.dev/reference/react/useContext) ) or [Redux](https://redux.js.org/) for state management.
